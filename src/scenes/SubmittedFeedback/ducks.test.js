@@ -1,12 +1,14 @@
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { fetchMock } from 'fetch-mock';
+// import { fetchMock } from 'fetch-mock';
 import issuesReducer, {
   createShowIssuesRequest,
   createShowIssuesSuccess,
   createShowIssuesFailure,
   loadIssues,
 } from './ducks';
+
+jest.mock('./api');
 
 // describe('Issues Reducer', () => {
 //   it('Should handle SHOW_ISSUES', () => {
@@ -70,34 +72,54 @@ import issuesReducer, {
 
 // TODO: Figure out how to mock the Swagger API call
 describe('async action creators', () => {
-  const middlewares = [thunk];
-  const initialState = { issues: null, hasError: false };
-  const mockStore = configureStore(middlewares);
+  it('should receive a valid promise and handle it properly', () => {
+    const testLoadIssues = loadIssues(); // Make two tests; name things accordingly depending on intent (success or failure)
+    const getState = function() {
+      return;
+    };
+    const dispatch = function(action) {
+      return;
+    };
 
-  afterEach(() => {
-    fetchMock.reset();
-    fetchMock.restore();
+    testLoadIssues(dispatch, getState);
   });
 
-  it('creates SHOW_ISSUES_SUCCESS when submitted issues have been loaded', () => {
-    fetchMock.getOnce('/submitted', {
-      items: { issues: [{ id: 11, description: 'too few dogs' }] },
-      headers: { 'content-type': 'application/json' },
-    });
+  it('should receive an invalid promise and handle it properly', () => {
+    // Need to get an invalid promise somehow - does that require another mock? Need to show that error.
+    // Am I testing the action value or the issue returned in the promise?
+    // If the promise value comes from the mock, am I testing for that? Should I provide the value to the mock function and then test for the provided value, rather than having the value hard-coded in the mock?
+    const testLoadIssues = loadIssues();
+    const getState = function() {
+      return;
+    };
+    const dispatch = function(action) {
+      return;
+    };
 
-    const expectedActions = [
-      { type: SHOW_ISSUES },
-      {
-        type: SHOW_ISSUES_SUCCESS,
-        items: { issues: [{ id: 11, description: 'too few dogs' }] },
-      },
-    ];
-
-    const store = mockStore(initialState);
-
-    return store.dispatch(loadIssues()).then(() => {
-      // return of async actions
-      expect(store.getActions()).toEqual(expectedActions);
-    });
+    // testLoadIssues(dispatch, getState);
+    // return store.dispatch(loadIssues()).then(() => {
+    //   // return of async actions
+    //   expect(store.getActions()).toEqual(expectedActions);
   });
+  // it('creates SHOW_ISSUES_SUCCESS when submitted issues have been loaded', () => {
+  //   fetchMock.getOnce('/submitted', {
+  //     items: { issues: [{ id: 11, description: 'too few dogs' }] },
+  //     headers: { 'content-type': 'application/json' },
+  //   });
+
+  //   const expectedActions = [
+  //     { type: SHOW_ISSUES },
+  //     {
+  //       type: SHOW_ISSUES_SUCCESS,
+  //       items: { issues: [{ id: 11, description: 'too few dogs' }] },
+  //     },
+  //   ];
+
+  //   const store = mockStore(initialState);
+
+  //   return store.dispatch(loadIssues()).then(() => {
+  //     // return of async actions
+  //     expect(store.getActions()).toEqual(expectedActions);
+  //   });
+  // });
 });
