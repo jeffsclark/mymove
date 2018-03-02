@@ -73,8 +73,9 @@ func main() {
 		log.Panic(err)
 	}
 
-	// initialize api pkg with dbConnection created above
+	// initialize api and auth pkg with dbConnection created above
 	handlers.Init(dbConnection)
+	auth.Init(dbConnection)
 
 	swaggerSpec, err := loads.Analyzed(internalapi.SwaggerJSON, "")
 	if err != nil {
